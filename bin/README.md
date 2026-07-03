@@ -1,0 +1,1 @@
+# spring_boot_thymeleaft_stop_service_in_loop

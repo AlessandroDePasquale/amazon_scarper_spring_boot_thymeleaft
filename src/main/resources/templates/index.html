@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <title>AmazRaper Benevunto</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="text-center">
+
+            <h1>Benevnuto/a
+                <br>AmazRaper
+                <br>test
+            </h1>
+
+            <hr>
+
+            <a class="btn btn-success" style="color: aliceblue;" th:href="@{/my-service-test/start-scraping}">Start service</a>
+
+            <a class="btn btn-danger" style="color: aliceblue;" th:href="@{/my-service-test/stop-scraping}">Stop service</a>
+
+            <br>
+
+            <hr>
+    
+            <a th:href="@{/my-service-test/exit-close}"
+                class="btn btn-danger btn-sm m-3"
+                style="color: aliceblue;">Close App</a>
+    
+            <hr>
+    
+        </div>
+
+    </div>
+</body>
+
+</html>
