@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <title>Add Production</title>
+</head>
+<body>
+
+    <br>
+    <br>
+
+    <div  class="container">
+    
+        <h3>Add production</h3>
+
+        <hr>
+
+        <form th:action="@{/production/save-production}" 
+            th:object="${production}" 
+            method="post">
+
+            <input type="hidden" name="id" th:value="*{id}">
+        
+            <br>
+            <br>
+
+            <!-- set th:fiedl to mapping field of object of row 21 (th:object="${production}") -->
+            <input type="text" th:field="*{link}" placeholder="Link . . ."
+                class="form-control">
+            
+            <br>
+            <br>
+    
+            <input type="number" step="0.1" th:field="*{priceTarget}" placeholder="Desired Price . . ."
+                class="form-control">
+        
+            <br>
+            <br>
+
+            <button type="submit" class="btn btn-info ">Save production</button>
+        
+        </form>
+
+        <hr>
+        
+              <a th:href="@{/production/index}"
+            class="btn btn-primary btn-sm mt-5"
+            style="color: aliceblue;font-size: medium; font-weight: 500;">Go to home</a>
+
+        <a th:href="@{/production/show-list-prodution}"
+            class="btn btn-primary btn-sm mt-5" style="color: aliceblue;font-size: medium; font-weight: 500;">Vai alla lista di prodotti</a>
+            
+            
+        
+    </div>
+    
+</body>
+</html>

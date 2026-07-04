@@ -1,6 +1,9 @@
 package com.thymeleaft.stopservice.demo.controller;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import lombok.Data;
@@ -14,11 +17,11 @@ public class ControllerAd {
 //		return ex.getMessage();
 //	}
 	
-	@GetMapping(value = "/error")
-	public String showError(Exception ex) {
-		System.out.println("test error");
-		return ex.getMessage();
-	}
+//	@GetMapping(value = "/error")
+//	public String showError(Exception ex) {
+//		System.out.println("test error");
+//		return ex.getMessage();
+//	}
 	
 //    @ExceptionHandler(HttpMessageNotReadableException.class)
 //    public ResponseEntity<ErrorResponse> handleJsonParseException(HttpMessageNotReadableException ex) {

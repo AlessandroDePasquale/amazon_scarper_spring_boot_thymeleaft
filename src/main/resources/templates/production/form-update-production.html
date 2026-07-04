@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <title>Update Production</title>
+</head>
+<body>
+
+    <br>
+    <br>
+
+    <div  class="container">
+    
+        <h3>Add production</h3>
+
+        <hr>
+
+        <form th:action="@{/production/update-production}"
+            th:object="${production}" 
+            method="post">
+        
+            <br>
+            <br>
+
+            <!-- th:field name will be macth with name of variable in entity class java -->
+            <label>Prezzo Desiderato : </label>
+            <input type="number" step="0.01" th:field="*{priceTarget}" 
+                class="form-control" >
+    
+            <br>
+            <br>
+
+            <input type="hidden" name="id" th:value="*{id}"> <!-- to update need id obj -->
+
+            <!-- seend any field of obj to not overire with null any filed not update -->
+            <input type="hidden" name="link" th:value="*{link}">
+            <input type="hidden" name="titleProdotto" th:value="*{titleProdotto}">
+            <input type="hidden" name="rating" th:value="*{rating}">
+            <input type="hidden" name="priceNow" th:value="*{priceNow}">
+            <input type="hidden" name="notificatedDate" th:value="*{notificatedDate}">
+
+            <button type="submit" class="btn btn-info ">Update prodotto</button>
+        
+        </form>
+
+        <hr>
+
+        <a th:href="@{/production/show-list-prodution}"
+            class="btn btn-primary btn-sm mt-5" style="color: aliceblue;font-size: medium; font-weight: 500;">Vai alla lista prodotti</a>
+        
+    </div>
+    
+</body>
+</html>

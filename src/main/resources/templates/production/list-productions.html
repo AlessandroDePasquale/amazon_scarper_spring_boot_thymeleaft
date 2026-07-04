@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
+    <title>Production List</title>
+</head>
+
+<body>
+
+    <!--<h1> lista brutta di employees : </h1>
+    
+    <br>
+    <br>-->
+
+    <div class="container">
+
+        <h3>Production List</h3>
+
+        <hr>
+
+        <!-- add a button to save new employee -->
+
+        <a th:href="@{/production/form-add-production}"
+                class="btn btn-primary btn-sm m-3"
+                style="color: aliceblue;">Add production</a>
+
+        <hr>
+
+        <!-- classi da bootstrap per lo stile della tabella -->
+        <table class="table table-bodered table-striped">
+
+            <thead class="table-dark">
+
+                <tr>
+                    <th>N°</th>
+                    <th>Title</th>
+					<th>Link</th>
+					<th>Rating</th>
+					<th>Current Price</th>
+					<th>Desired Price</th>
+					<th>Modify</th>
+					<th>Delete</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+                
+                <!-- tr sta per row della tabella , in questa inseirmeno una temp var che 
+                    continne ennessimo elemento della lista di employee inviata dal backend con il nome 
+                    employees , quandi si fa th:each="nomeVar : (: per assegnazione suppongo) ${nomeVarInArrivaDAlBackEnd}"-->
+                <tr th:each="tempProduction : ${productions}">
+                    
+                    <td th:text="${tempProduction.id}"/>
+                    <td th:text="${tempProduction.titleProdotto}"/>
+                    <!--<td th:text="${tempProduction.link}"/>-->
+                    <td>
+                        <a th:text="${tempProduction.link}" th:href="${tempProduction.link}" target="_blank"></a>
+                    </td>  
+                    <td th:text="${tempProduction.rating}"/>
+                    <td th:text="${tempProduction.priceNow}"/>
+                    <td th:text="${tempProduction.priceTarget}"/>
+                    <td> <!-- class="text-center" -->
+                        <!-- dont missing th: . . . -->
+                        <a th:href="@{/production/form-update-production(id=${tempProduction.id})}"
+                            class="btn btn-primary btn-sm">Update</a>
+                        <!--<form th:action="@{/employees/modify}" th:object="${tempProduction}" method="put">
+                            <button  type="submit" class="btn btn-primary btn-sm">Modify</button>
+                        </form>-->
+                    </td>
+                    <td>
+                        <form th:action="@{/production/delete}" method="get">
+                            <!-- value ste to seend param to java spring boot-->
+                            <input type="hidden" name="id" th:value="${tempProduction.id}">
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="if (!(confirm('Are you sure you want to delete this production?'))) return false">
+                                Delete</button>
+                        </form>
+                    </td>
+
+                </tr>
+
+            </tbody>
+
+        </table>
+            
+        <br>
+
+        <hr>
+
+        <a th:href="@{/production/index}"
+            class="btn btn-primary btn-sm m-3"
+            style="color: aliceblue;">Go to home</a>
+
+        <a th:href="@{/production/exit-close}"
+            class="btn btn-danger btn-sm m-3"
+            style="color: aliceblue;">Close App</a>
+
+        <hr>
+      
+            
+    </div>
+
+</body>
+
+<script>
+
+
+        function alertDelte(firstName){
+            if (!(confirm('Are you sure to delte employee : ' + firstName + ' ?')))
+                return false;
+            
+        }
+    
+
+</script>
+
+</html>
