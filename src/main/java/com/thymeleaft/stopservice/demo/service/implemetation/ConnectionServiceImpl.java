@@ -59,11 +59,11 @@ public class ConnectionServiceImpl implements ConnectionService {
 	public void scaperStart(List<ProductionModel> production) throws Exception{
 
 		for(ProductionModel p : production) {
-			if(tool.unlockItem(p.getNotificatedDate())) { // da completare 
+			if(!serviceRunning) {
+				break;
+			}
+			if(tool.unlockItem(p.getNotificatedDate())) { // da completare
 				scraperBody(p);
-				if(!serviceRunning) {
-					break;
-				}
 			} else {
 				log.info("production id : {}, skipped notificated today", p.getId());
 			}
@@ -76,11 +76,11 @@ public class ConnectionServiceImpl implements ConnectionService {
 	public boolean fristTryScarper(List<ProductionModel> production) throws Exception{
 
 		for(ProductionModel p : production) {
-			if(!scraperBody(p)) {
-				return false;
-			}
 			if(serviceRunning) {
 				break;
+			}
+			if(!scraperBody(p)) {
+				return false;
 			}
 		}
 
@@ -91,9 +91,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 
 		StopWatch timeExecute = new StopWatch();
 
-		boolean error = false, retry = false;
-
-		int countRetry = 0;
+		boolean error = false;
 
 		String productTitle, priceString, ratingString, sellerName, expedition = "";
 
@@ -107,8 +105,6 @@ public class ConnectionServiceImpl implements ConnectionService {
 				.seller(production.getSeller())
 				.shippedBy(production.getShippedBy())
 				.build();
-
-		do{
 
 			try {
 
@@ -165,12 +161,6 @@ public class ConnectionServiceImpl implements ConnectionService {
 						log.info("Venditore: " + sellerName);
 						log.info("Spedizione: " + expedition);
 
-						// check change field
-						if(!tempProduction.equals(production)) {
-							productionService.updateProdution(production);
-						}
-						
-						
 						if(priceNow <= Double.parseDouble(production.getPriceTarget())) {
 							log.info("Try send noitification");
 							production.setNotificatedDate(tool.getDateString());
@@ -178,20 +168,8 @@ public class ConnectionServiceImpl implements ConnectionService {
 							tool.openBrowser(production.getLink());
 						}
 						
-					} else {
-						countRetry++;
-						log.error("price not found start retry n° : " + countRetry);
-						if(countRetry < 9) {
-							retry = true;
-						}
 					}
 
-				} else {
-					countRetry++;
-					log.error("titolo not found start retry n° : " + countRetry);
-					if(countRetry < 9) {
-						retry = true;
-					}
 				}
 
 			} catch (Exception e) {
@@ -199,18 +177,15 @@ public class ConnectionServiceImpl implements ConnectionService {
 				log.error("Errore durante lo scraping: " + e.getMessage());
 				error = true;
 				throw new Exception("Exception into scaper : " + e.getMessage());
+			} finally {
+				// update production
+				productionService.updateProdution(production);
 			}
 
-//			if(countRetry < 9) {
-//				retry = true;
-//			}
 			
 			if(!serviceRunning) {
-				retry = false;
 				log.warn("interppunt scarping");
 			}
-
-		} while(retry);
 
 		return error;
 	}
