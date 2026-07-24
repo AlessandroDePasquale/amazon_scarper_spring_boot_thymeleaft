@@ -2,7 +2,6 @@ package com.thymeleaft.stopservice.demo.service.implemetation;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -40,25 +39,24 @@ public class ProductionServiceImpl implements ProductionService {
 
     @Override
     public ProductionModel findById(Long theId) {
-    	
+
     	List<ProductionModel> allProdution = findAll();
 
-        ProductionModel toUpdate = null;
+    	ProductionModel toUpdate = null;
 
-        if (CollectionUtils.isNotEmpty(allProdution)) {
-        	for(ProductionModel p : allProdution) {
-        		if(p.getId() == theId) {
-        			toUpdate = p;
-        		}
-        	}
-            
-        }
-        else {
-            // we didn't find the employee
-            throw new RuntimeException("Did not find production id - " + theId);
-        }
+    	if (CollectionUtils.isNotEmpty(allProdution)) {
+    		for(ProductionModel p : allProdution) {
+    			if(p.getId() == theId) {
+    				toUpdate = p;
+    			}
+    		}
 
-        return toUpdate;
+    	} else {
+    		// we didn't find the employee
+    		throw new RuntimeException("Did not find production id - " + theId);
+    	}
+
+    	return toUpdate;
     }
 
     @Override
@@ -80,7 +78,7 @@ public class ProductionServiceImpl implements ProductionService {
         		allProduction.remove(p);
         		repoJson.deleteJsonListRecords(p, tool.pathFileJson());
         		break;
-        	}
+        		}
         }
         
     }

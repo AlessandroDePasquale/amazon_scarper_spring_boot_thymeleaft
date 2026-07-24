@@ -1,1 +1,2 @@
-# spring_boot_thymeleaft_stop_service_in_loop
+# amazon_scarper_spring_boot_thymeleaft
+

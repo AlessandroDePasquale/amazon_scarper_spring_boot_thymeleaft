@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +12,7 @@ public class Scheduler {
 	
 	private final Logger log = LoggerFactory.getLogger(Scheduler.class);
 	
-	@Value("${server.port}")
+//	@Value("${server.port}")
 	private String serverPort; // get value port set on application.properties
 
 	@Bean
@@ -23,7 +22,7 @@ public class Scheduler {
 		
 		String os = System.getProperty("os.name").toLowerCase();
 		
-		if(serverPort.isEmpty()) {// check if value in application.properties is not empty else setport default 8080
+		if(null == serverPort || serverPort.isEmpty()) {// check if value in application.properties is not empty else setport default 8080
 			serverPort = "8080";
 		}
 		

@@ -373,7 +373,7 @@ public class Tool {
 			if (!pathFileJson.exists()) {
 				pathFileJson.createNewFile();
 				try {
-					ProductionModel production = new ProductionModel((long) 0, "https://www.amazon.it/dp/B0BTFWFRWN", "0", "0", "0", "0", "0", "0", stringDateYestrday(), false); // default record of fire stick
+					ProductionModel production = new ProductionModel((long) 0, "https://www.amazon.it/dp/B0BTFWFRWN", "0", "0", "0", "0", "0", "0", "da recuperare", stringDateYestrday(), false); // default record of fire stick
 					
 					repoJson.writeJsonListRecords(new ArrayList<ProductionModel>(Arrays.asList(production)), pathFileJson);
 				} catch (Exception e) {
@@ -397,28 +397,5 @@ public class Tool {
 	public String getDirExecuteJar() {
 		return System.getProperty("user.dir");
 	}
-	
-//	public static void main(String[] args) throws IOException {
-//		ProductionModel model = new ProductionModel("300", "275");
-//		discoutOf(model);
-//
-		// log.info(listLinkFromTxt("C:\\test\\link.txt"));
-//
-//		log.info("ciao : " + (double) 100/33 );
-//		log.info(onlyValueOfCoupon(" Applica coupon 9€  "));
-//
-		// modImg("")
-//
-//		testReWriteFileTxt(null);
-//
-//		log.info(onlyValueOfCoupon("✅ Applica coupon 9€"));
-//
-//		ArrayList<String> test = new ArrayList<String>();
-//
-//		test.add("https://www.amazon.it/Procos-84165-Palloncini-Stampati-Bianco/dp/B00LZV8YMY/ref=sr_1_3_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3TCWRHNEIWG8B&keywords=ciao&qid=1689691972&sprefix=ciao%2Caps%2C165&sr=8-3-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1");
-//
-//		testRewiteFileTxt(test);
-//
-//	}
 
 }

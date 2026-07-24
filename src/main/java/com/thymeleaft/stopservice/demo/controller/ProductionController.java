@@ -33,8 +33,6 @@ public class ProductionController {
 	
 	@Autowired
 	private ConnectionService connectionService;
-	
-//	private Thread myThread;
 		
 	@GetMapping({"/index","/", ""}) // accept list of path to call this endpoint
 	public String index(){
@@ -46,7 +44,7 @@ public class ProductionController {
 	@GetMapping("/show-list-prodution") // ommision value work any way
 	public String listproductions(Model model) {
 		
-		// get all productions from db
+		// get all productions from db(json db 😊)
 		List<ProductionModel> listproduction = productionService.findAll();
 		
 		log.info(listproduction.toString());
@@ -87,15 +85,6 @@ public class ProductionController {
 		return "redirect:/production/show-list-prodution"; // call endpoint to show table list of productions work fine
 	}
 	
-	// get html modify production
-	
-//	@GetMapping("/modify")
-//	public String showModifyproduction(@ModelAttribute production production, Model model) {
-//		
-//		model.addAttribute("production", production);
-//		
-//		return "productions/modify";
-//	}
 	
 	@GetMapping("/form-update-production")
 	public String showFormUpdateproduction(@RequestParam("id") Long id, Model model) {
@@ -158,10 +147,10 @@ public class ProductionController {
 		
 	}
 	
-	@PreDestroy
-	public void testPreDestroyApp() { // work
-		log.info("by by have a good day");
-	}
+//	@PreDestroy
+//	public void testPreDestroyApp() { // work
+//		log.info("by by have a good day");
+//	}
 	
 //	private void stopThread() {
 //		ThreadGroup group = Thread.currentThread().getThreadGroup();

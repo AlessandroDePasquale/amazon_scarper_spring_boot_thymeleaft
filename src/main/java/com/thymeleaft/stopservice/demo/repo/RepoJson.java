@@ -33,59 +33,6 @@ public class RepoJson {
 	@Autowired
 	private Tool tool;
 
-/*	public static void writeFristRecord(File pathToSaveJson) throws IOException {
-
-		JsonArray jsonArray = new JsonArray();
-
-		try (FileWriter file = new FileWriter(pathToSaveJson, true)) {
-			JsonObject newObject = new JsonObject();
-			newObject.addProperty("ID", 1);
-			newObject.addProperty("link", "https://www.amazon.it/echo-dot-2022/dp/B09B8RF4PY/ref=sr_1_1_ffob_sspa?__mk_it_IT=%C3%85M%C3%85%C5%BD%C3%95%C3%91&crid=3GSYMG9IYX8MS&keywords=eco&qid=1686584835&sprefix=ec%2Caps%2C172&sr=8-1-spons&sp_csd=d2lkZ2V0TmFtZT1zcF9hdGY&psc=1)");
-			newObject.addProperty("title", "");
-			newObject.addProperty("rating", "");
-			newObject.addProperty("targetPrice", "");
-			newObject.addProperty("lastPrice", "");
-
-			jsonArray.add(newObject);
-
-			try (FileWriter fileWriter = new FileWriter(pathToSaveJson)) {
-				System.out.println("tentativo di scrivere il json");
-				Gson gson = new GsonBuilder().setPrettyPrinting().create();
-				gson.toJson(jsonArray, fileWriter);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Scrittura completata");
-		
-	}*/
-	
-//	public void testUpdate(ProductionModel model) throws IOException {
-//		// Leggi il contenuto del file JSON in una stringa
-//		String jsonString = new String(Files.readAllBytes(Paths.get(Costants.path)));
-//
-//		// Analizza la stringa JSON in un oggetto Java
-//		Gson gson = new Gson();
-//		Type type = new TypeToken<List<ProductionModel>>(){}.getType();
-//		List<ProductionModel> productionModelList = gson.fromJson(jsonString, type);
-//
-//		// Modifica l'oggetto Java come desiderato
-//		for (ProductionModel myObject : productionModelList) {
-//		    if (myObject.getId() == model.getId()) {
-//		        myObject.setLastPrice(model.getLastPrice());
-//		        tool.createMsgForTelegram(myObject);
-//		        myObject.setNotificated(true);
-//		    }
-//		}
-//
-//		// Converti l'oggetto Java modificato in una stringa JSON
-//		String updatedJsonString = gson.toJson(productionModelList);
-//
-//		// Scrivi la stringa JSON nel file
-//		Files.write(Paths.get(Costants.path), updatedJsonString.getBytes());
-//
-//	}
-
 	public void updateJson(ProductionModel model) throws Exception{ // maybe it works
 
 		System.out.println("update json");
@@ -125,6 +72,7 @@ public class RepoJson {
 
 			elementoDaAggiornare.addProperty("priceNow", model.getPriceNow());
 			elementoDaAggiornare.addProperty("priceTarget", model.getPriceTarget());
+			elementoDaAggiornare.addProperty("timeToRetrive", model.getTimeToRetrive());
 			elementoDaAggiornare.addProperty("shippedBy", model.getShippedBy());
 			elementoDaAggiornare.addProperty("seller", model.getSeller());
 			
@@ -175,11 +123,12 @@ public class RepoJson {
 		
 		JsonObject newObject = null;
 		JsonObject objTrackingPrice = null; // obj json for new model
+		BufferedReader br = null;
 
 		if (file.exists()) {
 			try {
 				System.out.println("file exist");
-				BufferedReader br = new BufferedReader(fileReader);
+				br = new BufferedReader(fileReader);
 				if (br.readLine() == null) {
 					System.out.println("file is empty");
 				}else{
@@ -188,10 +137,6 @@ public class RepoJson {
 					
 					listLinkOld = tool.getListString(oldProductionList);
 					listLinkNew = tool.getListString(newProductionList);
-					/*ObjectMapper mapper = new ObjectMapper();
-					JsonNode node = mapper.readTree(file);
-					sizeOldList = node.size();
-					System.out.println("last id : " + sizeOldList);*/
 					
 					for(String link : listLinkOld) {
 						if(listLinkNew.contains(link)) {
@@ -207,15 +152,12 @@ public class RepoJson {
 			}catch(Exception e){
 				System.err.println("error on writeJsonListRecords");
 				e.printStackTrace();
+			} finally {
+				if(null != br) {
+					br.close();
+				}
 			}
 		}
-		
-//		for(int i = 0; i < newProductionList.size(); i++) {
-//			if(!newProductionList.get(0).isConsistentData3(newProductionList.get(i))) {
-//				System.out.println("Remove link : " + newProductionList.get(i).getLink());
-//				newProductionList.remove(i);
-//			}
-//		}
 		
 		sizeNewList = newProductionList.size();
 
@@ -229,6 +171,7 @@ public class RepoJson {
 				newObject.addProperty("rating", oldProductionList.get(i).getRating());
 				newObject.addProperty("priceTarget", oldProductionList.get(i).getPriceTarget());
 				newObject.addProperty("priceNow", oldProductionList.get(i).getPriceNow());
+				newObject.addProperty("timeToRetrive", oldProductionList.get(i).getTimeToRetrive());
 //				newObject.addProperty("priceDropBy", oldProductionList.get(i).getPriceDropBy());
 //				newObject.addProperty("coupon", oldProductionList.get(i).getCoupon());
 				newObject.addProperty("seller", oldProductionList.get(i).getSeller());
@@ -263,6 +206,7 @@ public class RepoJson {
 //			newObject.addProperty("priceAtTimeZero", newProductionList.get(i).getPriceAtTimeZero());
 			newObject.addProperty("priceTarget", newProductionList.get(i).getPriceTarget());
 			newObject.addProperty("priceNow", newProductionList.get(i).getPriceNow());
+			newObject.addProperty("timeToRetrive", newProductionList.get(i).getTimeToRetrive());
 //			newObject.addProperty("priceDropBy", newProductionList.get(i).getPriceDropBy());
 //			newObject.addProperty("coupon", newProductionList.get(i).getCoupon());
 			newObject.addProperty("seller", newProductionList.get(i).getSeller());
@@ -376,17 +320,15 @@ public class RepoJson {
 
 	public ArrayList<ProductionModel> readProductionFromJson(File pathFile) throws FileNotFoundException {
 		
-//		System.err.println("hello , readProductionFromJson");
-		
 		ProductionModel[] arrProduct = null;
 		ArrayList<ProductionModel> listProduction = new ArrayList<ProductionModel>();
 		JsonReader reader = null;
-
+		BufferedReader br = null;
 		FileReader fileReader = new FileReader(pathFile);
 
 		try {
 
-			BufferedReader br = new BufferedReader(fileReader);
+			br = new BufferedReader(fileReader);
 			if (br.readLine() == null) {
 				System.out.println("error file not have data");
 			}else {
@@ -409,10 +351,16 @@ public class RepoJson {
 			return listProduction;
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
+		} finally { //chiusura del file json
 			try {
-				if(reader != null) {
+				if(null != reader) {
 					reader.close();
+				}
+				if(null != br) {
+					br.close();
+				}
+				if(null != fileReader) {
+					br.close();
 				}
 			} catch (NullPointerException | IOException e) {
 				e.printStackTrace();
@@ -420,32 +368,5 @@ public class RepoJson {
 		}
 		return listProduction;
 	}
-
-
-	
-//	public static void main(String[] args) {
-//		File fileJson = new File(Costants.path);
-//
-//		ArrayList<ProductionModel> list = new ArrayList<ProductionModel>();
-//
-//		ProductionModel model = new ProductionModel(1, "ciao link", "prezzo desiderato AA ?");
-//		ProductionModel model2 = new ProductionModel(2, "link ciao", "null");
-//
-//		list.add(model);
-//		list.add(model2);
-//
-//		// writeJsonListRecords(list, new File("C:\\test\\test.json"));
-//
-//		try {
-//			writeJsonListRecords(list, fileJson);
-//		} catch (IOException e) {
-//			log.error("");
-//			e.printStackTrace();
-//		}
-//
-////	  Thread.sleep(2000);
-////	  
-////	  readProdctFromJson(new File("C:\\test\\test.json"));
-//	}
 
 }

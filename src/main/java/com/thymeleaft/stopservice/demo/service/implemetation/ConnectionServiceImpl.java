@@ -1,6 +1,5 @@
 package com.thymeleaft.stopservice.demo.service.implemetation;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -62,7 +61,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 			if(!serviceRunning) {
 				break;
 			}
-			if(tool.unlockItem(p.getNotificatedDate())) { // da completare
+			if(tool.unlockItem(p.getNotificatedDate())) {
 				scraperBody(p);
 			} else {
 				log.info("production id : {}, skipped notificated today", p.getId());
@@ -70,21 +69,6 @@ public class ConnectionServiceImpl implements ConnectionService {
 		}
 		// on finish one cilce reload file json for eventuale update
 		production = productionService.findAll();
-	}
-
-	@Override
-	public boolean fristTryScarper(List<ProductionModel> production) throws Exception{
-
-		for(ProductionModel p : production) {
-			if(serviceRunning) {
-				break;
-			}
-			if(!scraperBody(p)) {
-				return false;
-			}
-		}
-
-		return true;
 	}
 
 	public boolean scraperBody(ProductionModel production) throws Exception {
@@ -95,17 +79,6 @@ public class ConnectionServiceImpl implements ConnectionService {
 
 		String productTitle, priceString, ratingString, sellerName, expedition = "";
 
-		ProductionModel tempProduction = ProductionModel.builder()
-				.id(production.getId())
-				.link(production.getLink())
-				.titleProdotto(production.getTitleProdotto())
-				.rating(production.getRating())
-				.priceTarget(production.getPriceTarget())
-				.priceNow(production.getPriceNow())
-				.seller(production.getSeller())
-				.shippedBy(production.getShippedBy())
-				.build();
-
 			try {
 
 				timeExecute.start();
@@ -113,16 +86,12 @@ public class ConnectionServiceImpl implements ConnectionService {
 				// Fetch the HTML content of the Amazon product page
 				Document document = Jsoup.connect(production.getLink()).ignoreContentType(true).get();
 
-				timeExecute.stop();
-
-				log.info("second to retieve html page : " + (Double) (timeExecute.getLastTaskTimeMillis() / 1000.0)); // / 1000.0 (insert comma to devide to double and then will be cast it in double) to get secod 
-
 				// Extract the product title
 				productTitle = document.getElementsByClass("a-size-large product-title-word-break").text();
 
 				if(!StringUtils.isEmpty(productTitle)) {
 
-					production.setTitleProdotto(productTitle);
+					production.setTitleProdotto(productTitle.length()> 65 ? productTitle.substring(0, 65) : productTitle);//update 24/07/2026);
 
 					log.info("Titolo prodotto: " + productTitle);
 
@@ -136,13 +105,13 @@ public class ConnectionServiceImpl implements ConnectionService {
 
 						double priceNow = parsePrice(priceString);
 
-						production.setPriceNow(String.valueOf(priceNow));
+						production.setPriceNow(String.valueOf(priceNow) + "€");
 
 						log.info("Prezzo corrente: " + priceNow + "€");
 
 						// Extract the product rating 
 						ratingString = document.getElementsByClass("a-icon-alt").first().text();
-						//			double rating = parseRating(ratingString);
+						// double rating = parseRating(ratingString);
 						production.setRating(ratingString);
 //						production.setRating(ratingString + "/5");
 
@@ -154,7 +123,11 @@ public class ConnectionServiceImpl implements ConnectionService {
 
 						production.setSeller(sellerName);
 						production.setShippedBy(expedition);
+						
+						timeExecute.stop();
 
+						log.info("second to retieve all data from the page : " + (Double) (timeExecute.getLastTaskTimeMillis() / 1000.0)); // / 1000.0 (insert comma to devide to double and then will be cast it in double) to get secod 
+						production.setTimeToRetrive(String.valueOf(timeExecute.getLastTaskTimeMillis() / 1000.0) + " secondi");
 
 						// Print the scraped data
 
@@ -168,6 +141,9 @@ public class ConnectionServiceImpl implements ConnectionService {
 							tool.openBrowser(production.getLink());
 						}
 						
+						// update production
+						productionService.updateProdution(production);
+						
 					}
 
 				}
@@ -177,11 +153,7 @@ public class ConnectionServiceImpl implements ConnectionService {
 				log.error("Errore durante lo scraping: " + e.getMessage());
 				error = true;
 				throw new Exception("Exception into scaper : " + e.getMessage());
-			} finally {
-				// update production
-				productionService.updateProdution(production);
 			}
-
 			
 			if(!serviceRunning) {
 				log.warn("interppunt scarping");
