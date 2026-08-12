@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css">
-    <title>Update Production</title>
+    <title>Aggiorna prodotto</title>
 </head>
 <body>
 
@@ -13,7 +13,7 @@
 
     <div  class="container">
     
-        <h3>Add production</h3>
+        <h3>Aggiorna prodotto</h3>
 
         <hr>
 
@@ -26,7 +26,7 @@
 
             <!-- th:field name will be macth with name of variable in entity class java -->
             <label>Prezzo Desiderato : </label>
-            <input type="number" step="0.01" th:field="*{priceTarget}" 
+            <input type="number" step="1" th:field="*{priceTarget}" 
                 class="form-control" >
     
             <br>
@@ -41,7 +41,7 @@
             <input type="hidden" name="priceNow" th:value="*{priceNow}">
             <input type="hidden" name="notificatedDate" th:value="*{notificatedDate}">
 
-            <button type="submit" class="btn btn-info ">Update prodotto</button>
+            <button type="submit" class="btn btn-info ">Aggiorna prodotto</button>
         
         </form>
 
