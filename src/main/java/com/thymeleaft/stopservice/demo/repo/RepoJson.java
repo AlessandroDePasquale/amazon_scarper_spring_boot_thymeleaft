@@ -238,7 +238,7 @@ public class RepoJson {
 	
 	public void deleteJsonListRecords(ProductionModel toDelte, File file) throws IOException {
 
-		System.out.println("List in arrivo : " + toDelte.toString());
+		System.out.println("ProductionModel in arrivo : " + toDelte.toString());
 		
 		JsonArray jsonArray = new JsonArray();
 		ArrayList<ProductionModel> oldProductionList = new ArrayList<ProductionModel>();
@@ -287,6 +287,7 @@ public class RepoJson {
 				newObject.addProperty("rating", oldProductionList.get(i).getRating());
 				newObject.addProperty("priceTarget", oldProductionList.get(i).getPriceTarget());
 				newObject.addProperty("priceNow", oldProductionList.get(i).getPriceNow());
+				newObject.addProperty("timeToRetrive", oldProductionList.get(i).getTimeToRetrive());
 //				newObject.addProperty("priceDropBy", oldProductionList.get(i).getPriceDropBy());
 //				newObject.addProperty("coupon", oldProductionList.get(i).getCoupon());
 				newObject.addProperty("seller", oldProductionList.get(i).getSeller());
